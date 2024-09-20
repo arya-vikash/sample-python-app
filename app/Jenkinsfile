@@ -45,7 +45,7 @@ pipeline {
                     /kaniko/executor \
                         --context `pwd` \
                         --dockerfile `pwd`/app/Dockerfile \
-                        --destination ${IMAGE_URL}
+                        --destination ${IMAGE_URL} \
                         --no-push
                     '''
 
