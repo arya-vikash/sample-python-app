@@ -13,7 +13,7 @@ pipeline {
             steps {
 
                 echo 'Installing Python dependencies...'
-                sh 'pip3 install -r requirements.txt'  // Using pip3 in case Python3 is installed by default
+                sh 'pip3 install --break-system-packages -r requirements.txt'  // Using pip3 in case Python3 is installed by default
             }
         }
 
