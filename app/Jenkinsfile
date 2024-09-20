@@ -44,9 +44,10 @@ pipeline {
                     sh '''
                     export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
                     ls -l $(pwd)/app/
+                    cd ./app
                     /kaniko/executor \
                         --context `pwd` \
-                        --dockerfile `pwd`/app/Dockerfile --no-push\
+                        --dockerfile `pwd`/Dockerfile --no-push\
                         --destination ${IMAGE_URL} \
                     '''
 
