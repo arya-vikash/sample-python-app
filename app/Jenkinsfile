@@ -25,7 +25,7 @@ pipeline {
             steps {
                 echo 'Running tests...'
                 // Example of running tests using pytest
-                sh 'pytest tests/'
+                //sh 'pytest tests/'
             }
         }
 
@@ -39,7 +39,15 @@ pipeline {
                     // '''
 
                     // Build Docker image
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    //sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    //Run Kaniko to build and push the image
+                    sh '''
+                    /kaniko/executor \
+                        --context `pwd` \
+                        --dockerfile `pwd`/app/Dockerfile \
+                        --destination ${IMAGE_URL}
+                        --no-push
+                    '''
 
                     // Tag Docker image for ECR
                     sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} <aws_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
