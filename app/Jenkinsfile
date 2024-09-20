@@ -13,9 +13,11 @@ pipeline {
             steps {
 
                 echo 'Installing Python dependencies...'
-                echo 'pwd'
-                cd './app'
-                sh 'pip3 install --break-system-packages -r requirements.txt'  // Using pip3 in case Python3 is installed by default
+                sh '''
+                pwd
+                cd ./app
+                pip3 install --break-system-packages -r requirements.txt
+                '''  // Using pip3 in case Python3 is installed by default
             }
         }
 
