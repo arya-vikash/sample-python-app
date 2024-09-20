@@ -11,9 +11,21 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies...'
-                // Assumes you have a requirements.txt file in your repo
-                sh 'pip install -r requirements.txt'
+                echo 'Checking and installing pip if not found...'
+                script {
+                    sh '''
+                    if ! command -v pip &> /dev/null; then
+                        echo "pip not found, installing pip..."
+                        sudo apt-get update
+                        sudo apt-get install -y python3-pip
+                    else
+                        echo "pip is already installed"
+                    fi
+                    '''
+                }
+
+                echo 'Installing Python dependencies...'
+                sh 'pip install -r requirements.txt'  // Using pip3 in case Python3 is installed by default
             }
         }
 
