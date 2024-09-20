@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'eu-west-2'
+        ECR_REPOSITORY = '160071257600.dkr.ecr.eu-west-2.amazonaws.com'
+        IMAGE_NAME = 'sample-ecr'
+        IMAGE_TAG = 'latest'
+    }
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing dependencies...'
+                // Assumes you have a requirements.txt file in your repo
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                echo 'Running tests...'
+                // Example of running tests using pytest
+                sh 'pytest tests/'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                script {
+                    // Login to Amazon ECR
+                    // sh '''
+                    // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com
+                    // '''
+
+                    // Build Docker image
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+
+                    // Tag Docker image for ECR
+                    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} <aws_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        // stage('Push Docker Image to ECR') {
+        //     steps {
+        //         echo 'Pushing Docker image to ECR...'
+        //         sh "docker push <aws_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
+        //     }
+        // }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up Docker images...'
+            sh 'docker rmi $(docker images -f "dangling=true" -q) || true'
+        }
+
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
