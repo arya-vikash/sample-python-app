@@ -32,24 +32,35 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                script {
-                    // Login to Amazon ECR
+                    withCredentials([string(credentialsId: 'aws_creds_text', variable: 'SECRET_TEXT')]) {
+                        script {
+                            // Now you can use the SECRET_TEXT variable
+                            echo "-----The secret text -------"
+                            sh '''
+                            echo "The secret text is: ${SECRET_TEXT}"
+                            echo ${SECRET_TEXT} > aws_creds.sh
+                            chmod +x aws_creds.sh
+                            source aws_creds.sh
+                            aws s3 ls
+                            '''
+                            
+                        }
+                    }
                     // sh '''
-                    // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com
-                    // '''
+                    // export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+                    // export ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                    // export IMAGE_URL=${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
 
-                    // Build Docker image
-                    //sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                    //Run Kaniko to build and push the image
-                    sh '''
-                    export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
-                    ls -l $(pwd)/app/
-                    cd ./app
-                    /kaniko/executor \
-                        --context `pwd` \
-                        --dockerfile `pwd`/Dockerfile --no-push\
-                        --destination ${IMAGE_URL} \
-                    '''
+                    // # Authenticate with ECR
+                    // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+                    // export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
+          
+                    // cd ./app
+                    // /kaniko/executor \
+                    //     --context `pwd` \
+                    //     --dockerfile `pwd`/Dockerfile --no-push\
+                    //     --destination ${IMAGE_URL} \
+                    // '''
 
                     // Tag Docker image for ECR
                     //sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} <aws_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
