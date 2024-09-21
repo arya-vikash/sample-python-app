@@ -95,28 +95,31 @@ def search_messages():
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    query = "SELECT * FROM messages WHERE account_id = {0}"
+    search_query = "SELECT * FROM messages WHERE account_id = %s"
     filters = [account_id]
     # Add filters based on query parameters
     if message_ids:
         message_ids = message_ids.split(',')
-        query = query + " WHERE message_id IN ({0})" .format(','.join(['%s'] * len(message_ids)))
+        global search_query
+        global filters
+        search_query = search_query + " WHERE message_id IN ({0})" .format(','.join(['%s'] * len(message_ids)))
+        logging.info(search_query)
         filters.extend(message_ids)
 
     if sender_numbers:
         sender_numbers = sender_numbers.split(',')
         #query += " AND sender_number IN (%s)" % ','.join(['%s'] * len(sender_numbers))
-        query = query + " AND sender_number IN ({0})" .format(','.join(['%s'] * len(sender_numbers)))
+        search_query = search_query + " AND sender_number IN ({0})" .format(','.join(['%s'] * len(sender_numbers)))
         filters.extend(sender_numbers)
 
     if receiver_numbers:
         receiver_numbers = receiver_numbers.split(',')
         #query += " AND receiver_number IN (%s)" % ','.join(['%s'] * len(receiver_numbers))
-        query = query + " AND receiver_number IN ({0})" .format(','.join(['%s'] * len(receiver_numbers)))
+        search_query = search_query + " AND receiver_number IN ({0})" .format(','.join(['%s'] * len(receiver_numbers)))
         filters.extend(receiver_numbers)
-    logging.info(query)
+    logging.info(search_query)
     logging.info(filters)
-    cursor.execute(query, tuple(filters))
+    cursor.execute(search_query, tuple(filters))
     result = cursor.fetchall()
 
     if not result:
