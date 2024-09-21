@@ -31,51 +31,51 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                    withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
-                        script {
-                            // Set AWS credentials from the file for AWS CLI
-                            sh '''
-                            mkdir -p ~/.aws
-                            cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
-
-                            aws s3 ls
-                            '''
-
-                            // Test AWS CLI with S3 list command
-                            //sh 'aws s3 ls'
-                        }
-                    }
-                    // withCredentials([string(credentialsId: 'aws_creds_txt', variable: 'SECRET_TEXT')]) {
+                    // withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
                     //     script {
-                    //         // Now you can use the SECRET_TEXT variable
-                    //         echo "-----The secret text -------"
+                    //         // Set AWS credentials from the file for AWS CLI
                     //         sh '''
-                    //         echo ${SECRET_TEXT} > aws_creds.sh
-                    //         cat aws_creds.sh
                     //         mkdir -p ~/.aws
-                    //         echo ${SECRET_TEXT} > ~/.aws/credentials
-                    //         echo "The secret text is: ${SECRET_TEXT}"
-                        
+                    //         cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
+
                     //         aws s3 ls
                     //         '''
-                    //         // sh '''
-                    //         // export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-                    //         // export ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-                    //         // export IMAGE_URL=${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
 
-                    //         // # Authenticate with ECR
-                    //         // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                    //         // export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
-                
-                    //         // cd ./app
-                    //         // /kaniko/executor \
-                    //         //     --context `pwd` \
-                    //         //     --dockerfile `pwd`/Dockerfile --no-push\
-                    //         //     --destination ${IMAGE_URL} \
-                    //         // '''
-                            
+                    //         // Test AWS CLI with S3 list command
+                    //         //sh 'aws s3 ls'
                     //     }
                     // }
+                    withCredentials([string(credentialsId: 'aws_creds_txt', variable: 'SECRET_TEXT')]) {
+                        script {
+                            // Now you can use the SECRET_TEXT variable
+                            echo "-----The secret text -------"
+                            sh '''
+                            echo ${SECRET_TEXT} > aws_creds.sh
+                            cat aws_creds.sh
+                            mkdir -p ~/.aws
+                            echo ${SECRET_TEXT} > ~/.aws/credentials
+                            echo "The secret text is: ${SECRET_TEXT}"
+                        
+                            aws s3 ls
+                            '''
+                            // sh '''
+                            // export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+                            // export ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                            // export IMAGE_URL=${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+
+                            // # Authenticate with ECR
+                            // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+                            // export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
+                
+                            // cd ./app
+                            // /kaniko/executor \
+                            //     --context `pwd` \
+                            //     --dockerfile `pwd`/Dockerfile --no-push\
+                            //     --destination ${IMAGE_URL} \
+                            // '''
+                            
+                        }
+                    }
                 }
         }
 
