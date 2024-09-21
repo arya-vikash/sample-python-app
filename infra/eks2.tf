@@ -32,9 +32,9 @@ module "eks" {
       min_size     = 2
       max_size     = 10
       desired_size = 2
-      additional_policies = [
-        aws_iam_policy.publish_cloudwatch_logs.arn
-      ]
+      iam_role_additional_policies = {
+        Cloudwatch_push = aws_iam_policy.publish_cloudwatch_logs.arn
+      }
     }
   }
 

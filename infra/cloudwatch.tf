@@ -1,4 +1,4 @@
-resource "aws_cloudwatch_log_group" "yada" {
+resource "aws_cloudwatch_log_group" "this" {
   name = "eks-python-app-log-group"
 
   tags = {
