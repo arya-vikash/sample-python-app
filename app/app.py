@@ -84,6 +84,47 @@ def get_messages(account_id):
 
     except Exception as e:
         return handle_exception(e)
+# Search
+@app.route('/search', methods=['GET'])
+def search_messages():
+    account_id = request.args.get('account_id')
+    message_ids = request.args.get('message_id')
+    sender_numbers = request.args.get('sender_number')
+    receiver_numbers = request.args.get('receiver_number')
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM messages WHERE account_id = {0}"
+    filters = [account_id]
+    # Add filters based on query parameters
+    if message_ids:
+        message_ids = message_ids.split(',')
+        query = query + " WHERE message_id IN ({0})" .format(','.join(['%s'] * len(message_ids)))
+        filters.extend(message_ids)
+
+    if sender_numbers:
+        sender_numbers = sender_numbers.split(',')
+        #query += " AND sender_number IN (%s)" % ','.join(['%s'] * len(sender_numbers))
+        query = query + " AND sender_number IN ({0})" .format(','.join(['%s'] * len(sender_numbers)))
+        filters.extend(sender_numbers)
+
+    if receiver_numbers:
+        receiver_numbers = receiver_numbers.split(',')
+        #query += " AND receiver_number IN (%s)" % ','.join(['%s'] * len(receiver_numbers))
+        query = query + " AND receiver_number IN ({0})" .format(','.join(['%s'] * len(receiver_numbers)))
+        filters.extend(receiver_numbers)
+    logger.info(query)
+    logger.info(filters)
+    cursor.execute(query, tuple(filters))
+    result = cursor.fetchall()
+
+    if not result:
+        return jsonify({"message": "No messages found matching the search criteria"}), 404
+    
+    cursor.close()
+    conn.close()
+    return jsonify(result), 200
 
 if __name__ == '__main__':
     init_db()

@@ -64,8 +64,8 @@ pipeline {
     post {
         success {
             echo 'Pipeline completed successfully!'
-            echo 'Triggering infra-sample pipeline'
-            build job: 'infra-sample'
+            //echo 'Triggering infra-sample pipeline'
+            //build job: 'infra-sample'
         }
 
         failure {
