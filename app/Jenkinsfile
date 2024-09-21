@@ -36,6 +36,7 @@ pipeline {
                             // Now you can use the SECRET_TEXT variable
                             echo "-----The secret text -------"
                             sh '''
+                            cat ~/.aws/credentials
                             echo "The secret text is: ${SECRET_TEXT}"
                             echo ${SECRET_TEXT} > aws_creds.sh
                             chmod +x aws_creds.sh
