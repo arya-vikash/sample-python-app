@@ -78,6 +78,15 @@ def get_messages(account_id):
         cursor.execute(query, (account_id,))
         messages = cursor.fetchall()
         logging.info(f"Fetched messages for account: {account_id}")
+
+        formated_messages=[]
+        for item in messages:
+        formated_messages.append({
+            "account_id":item[0],
+            "message_id":item[1],
+            "sender_number":item[2],
+            "receiver_number":item[3]
+        })
         cursor.close()
         conn.close()
         return jsonify(messages), 200
@@ -87,51 +96,63 @@ def get_messages(account_id):
 # Search
 @app.route('/search', methods=['GET'])
 def search_messages():
-    account_id = request.args.get('account_id')
-    message_ids = request.args.get('message_id')
-    sender_numbers = request.args.get('sender_number')
-    receiver_numbers = request.args.get('receiver_number')
+    try:
+        account_id = request.args.get('account_id')
+        message_ids = request.args.get('message_id')
+        sender_numbers = request.args.get('sender_number')
+        receiver_numbers = request.args.get('receiver_number')
 
-    logging.info(f"account_id: {account_id}, message_ids: {message_ids}, sender_numbers: {sender_numbers}, receiver_numbers: {receiver_numbers}")
+        logging.info(f"account_id: {account_id}, message_ids: {message_ids}, sender_numbers: {sender_numbers}, receiver_numbers: {receiver_numbers}")
 
-    conn = mysql.connect()
-    cursor = conn.cursor()
+        conn = mysql.connect()
+        cursor = conn.cursor()
 
-    search_query = "SELECT * FROM messages WHERE account_id = %s"
-    filters = [account_id]
-    filter_conditions = []
-    # Add filters based on query parameters
-    if message_ids:
-        message_ids = message_ids.split(',')
-        filter_conditions.append("message_id IN ({})".format(','.join(['%s'] * len(message_ids))))
-        filters.extend(message_ids)
+        search_query = "SELECT * FROM messages WHERE account_id = %s"
+        filters = [account_id]
+        filter_conditions = []
+        # Add filters based on query parameters
+        if message_ids:
+            message_ids = message_ids.split(',')
+            filter_conditions.append("message_id IN ({})".format(','.join(['%s'] * len(message_ids))))
+            filters.extend(message_ids)
 
-    if sender_numbers:
-        sender_numbers = sender_numbers.split(',')
-        filter_conditions.append("sender_number IN ({})".format(','.join(['%s'] * len(sender_numbers))))
-        filters.extend(sender_numbers)
+        if sender_numbers:
+            sender_numbers = sender_numbers.split(',')
+            filter_conditions.append("sender_number IN ({})".format(','.join(['%s'] * len(sender_numbers))))
+            filters.extend(sender_numbers)
 
-    if receiver_numbers:
-        receiver_numbers = receiver_numbers.split(',')
-        filter_conditions.append("receiver_number IN ({})".format(','.join(['%s'] * len(receiver_numbers))))
-        filters.extend(receiver_numbers)
-    
-    if filter_conditions:
-        search_query += " AND " + " AND ".join(filter_conditions)
+        if receiver_numbers:
+            receiver_numbers = receiver_numbers.split(',')
+            filter_conditions.append("receiver_number IN ({})".format(','.join(['%s'] * len(receiver_numbers))))
+            filters.extend(receiver_numbers)
+        
+        if filter_conditions:
+            search_query += " AND " + " AND ".join(filter_conditions)
 
-    logging.info(f"Search Query: {search_query}")
-    logging.info(f"Filters: {filters}")
+        logging.info(f"Search Query: {search_query}")
+        logging.info(f"Filters: {filters}")
 
-    cursor.execute(search_query, tuple(filters))
-    result = cursor.fetchall()
+        cursor.execute(search_query, tuple(filters))
+        result = cursor.fetchall()
 
-    if not result:
-        return jsonify({"message": "No messages found matching the search criteria"}), 404
-    
-    cursor.close()
-    conn.close()
-    return jsonify(result), 200
-
+        if not result:
+            return jsonify({"message": "No messages found matching the search criteria"}), 404
+        
+        #format result output
+        formated_result=[]
+        for item in result:
+            formated_result.append({
+                "account_id":item[0],
+                "message_id":item[1],
+                "sender_number":item[2],
+                "receiver_number":item[3]
+            })
+        cursor.close()
+        conn.close()
+        return jsonify(formated_result), 200
+        
+    except Exception as e:
+        return handle_exception(e)
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000)
