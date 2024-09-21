@@ -1,0 +1,8 @@
+FROM --platform=linux/amd64 fluent/fluentd:v1.17-debian-amd64-1
+
+USER root
+RUN mkdir -p /var/log && chown -R fluent:fluent /var/log
+# Install fluent-plugin-cloudwatch-logs
+RUN gem install fluent-plugin-cloudwatch-logs --no-document
+
+USER fluent

@@ -2,3 +2,4 @@ Flask==2.0.1
 Werkzeug==2.2.2
 cryptography
 Flask-MySQL==1.4.0  
+pytest==7.2.1

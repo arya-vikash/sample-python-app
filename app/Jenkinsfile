@@ -23,9 +23,11 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                // Example of running tests using pytest
-                //sh 'pytest tests/'
+                echo 'Running unit tests'
+                sh '''
+                cd app
+                pytest test_app.py
+                '''
             }
         }
 
