@@ -13,10 +13,13 @@ COPY . .
 
 # Expose port
 EXPOSE 5000
-
-# Security best practices: non-root user
-RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
+# Create the logging directory
+RUN mkdir -p /var/log/app 
+# non-root user
+RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app &&  chown -R appuser /var/log/app
 USER appuser
+
+
 
 # Command to run the app
 CMD ["python", "app.py"]

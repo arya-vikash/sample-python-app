@@ -10,6 +10,7 @@ import os
 
 # Initialize Flask app
 app = Flask(__name__)
+
 setup_logging()
 
 mysql = MySQL()

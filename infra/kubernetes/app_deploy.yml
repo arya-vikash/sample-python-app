@@ -33,6 +33,24 @@ spec:
               value: messages_db
             - name: MYSQL_DATABASE_HOST
               value: mysql
+        - name: fluentd
+          image: fluent/fluentd:latest
+          env:
+          - name: AWS_REGION
+            value: "your-region"
+          volumeMounts:
+          - name: app-logs
+            mountPath: /var/log/app 
+          - name: fluentd-config
+            mountPath: /fluentd/etc/fluent.conf
+            subPath: fluent.conf
+
+      volumes:
+      - name: app-logs
+        emptyDir: {} 
+      - name: fluentd-config
+        configMap:
+          name: fluentd-config
 
 ---
 apiVersion: v1
