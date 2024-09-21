@@ -31,7 +31,6 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image...'
                     withCredentials([string(credentialsId: 'aws_creds_text', variable: 'SECRET_TEXT')]) {
                         script {
                             // Now you can use the SECRET_TEXT variable
@@ -43,29 +42,25 @@ pipeline {
                             source aws_creds.sh
                             aws s3 ls
                             '''
+                            // sh '''
+                            // export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+                            // export ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                            // export IMAGE_URL=${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+
+                            // # Authenticate with ECR
+                            // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+                            // export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
+                
+                            // cd ./app
+                            // /kaniko/executor \
+                            //     --context `pwd` \
+                            //     --dockerfile `pwd`/Dockerfile --no-push\
+                            //     --destination ${IMAGE_URL} \
+                            // '''
                             
                         }
                     }
-                    // sh '''
-                    // export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-                    // export ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-                    // export IMAGE_URL=${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
-
-                    // # Authenticate with ECR
-                    // aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                    // export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
-          
-                    // cd ./app
-                    // /kaniko/executor \
-                    //     --context `pwd` \
-                    //     --dockerfile `pwd`/Dockerfile --no-push\
-                    //     --destination ${IMAGE_URL} \
-                    // '''
-
-                    // Tag Docker image for ECR
-                    //sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} <aws_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
                 }
-            }
         }
 
         // stage('Push Docker Image to ECR') {
