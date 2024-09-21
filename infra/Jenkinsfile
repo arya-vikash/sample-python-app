@@ -15,7 +15,6 @@ pipeline {
                 echo 'Running Terraform Plan on $(pwd)/infra'
                 sh '''
                 mkdir -p ~/.aws
-                rm -f ~/.aws/credentials || true
                 cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
                 cd infra
                 terraform init
