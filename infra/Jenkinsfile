@@ -9,17 +9,14 @@ pipeline {
     }
 
     stages {
-
-        stage('Terraform init') {
+        stage('Login to AWS') {
             steps {
                 withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
                     script {
-                        echo 'Running Terraform Plan on $(pwd)/infra'
+                        echo 'Setting up AWS credentials'
                         sh '''
                         mkdir -p ~/.aws
                         cp $AWS_CREDENTIALS_FILE  ~/.aws/credentials
-                        cd infra
-                        terraform init
                         '''
                     }
                 }
@@ -27,16 +24,39 @@ pipeline {
             }
         }
 
-        stage('Terraform Plan') {
+        stage('Terraform init') {
             steps {
-                    withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
-                        script {
-                            sh '''
-                            cd infra
-                            terraform plan
-                            '''
-                        }
-                    }
+                echo 'Initializing terraform infrastructure'
+                sh '''
+                cd infra
+                terraform init
+                '''
+            }
+        }
+
+        stage('Terraform Plan & validate') {
+            steps {
+                    echo " Validating terraform code"
+                    sh '''
+                    cd infra
+                    terraform fmt
+                    terraform validate
+                    '''
+                    echo "Running Terraform Plan"
+                    sh '''
+                    cd infra
+                    terraform validate
+                    terraform plan  -out=tf-plan
+                    '''
+                }
+        }
+        stage('Terraform Apply') {
+            steps {
+                    echo "Deploying terraform infrastructure"
+                    sh '''
+                    cd infra
+                    terraform apply tf-plan
+                    '''
                 }
         }
     }
