@@ -46,6 +46,7 @@ pipeline {
                                 --context `pwd` \
                                 --dockerfile `pwd`/Dockerfile \
                                 --destination ${IMAGE_URL} \
+                                --platform linux/amd64
                             '''
                         }
                     }
