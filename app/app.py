@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
-#import pymysql
 import logging
 import uuid
-#from db_config import get_db_connection
 from logging_config import setup_logging
 from flaskext.mysql import MySQL
 import os
@@ -41,15 +39,13 @@ def init_db():
 
 @app.route("/")
 def index():
-    """Function to test the functionality of the API"""
     return "Hello, world!"
-#Error Handling
+
 @app.errorhandler(Exception)
 def handle_exception(e):
     logging.error(f"Error occurred: {str(e)}")
     return jsonify({'error': str(e)}), 500
 
-# Create message
 @app.route('/create', methods=['POST'])
 def create_message():
     try:

@@ -1,7 +1,8 @@
 import os
 import pytest
 from flask import json
-from app import app, mysql 
+from unittest.mock import MagicMock
+from app import app, mysql  # Adjust the import based on your file structure
 
 @pytest.fixture
 def client():
@@ -30,7 +31,10 @@ def test_create_message(client, monkeypatch):
     }
     
     # Mock database connection
-    monkeypatch.setattr(mysql, 'connect', lambda: MagicMock())
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    monkeypatch.setattr(mysql, 'connect', lambda: mock_conn)
+    mock_conn.cursor.return_value = mock_cursor
 
     response = client.post('/create', json=test_data)
     assert response.status_code == 201
