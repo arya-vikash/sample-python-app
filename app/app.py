@@ -92,6 +92,8 @@ def search_messages():
     sender_numbers = request.args.get('sender_number')
     receiver_numbers = request.args.get('receiver_number')
 
+    logging.info(f"account_id: {account_id}, message_ids: {message_ids}, sender_numbers: {sender_numbers}, receiver_numbers: {receiver_numbers}")
+
     conn = mysql.connect()
     cursor = conn.cursor()
 
