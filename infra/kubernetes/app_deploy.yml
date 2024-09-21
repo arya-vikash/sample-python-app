@@ -37,7 +37,7 @@ spec:
           image: fluent/fluentd:latest
           env:
           - name: AWS_REGION
-            value: "your-region"
+            value: "eu-west-2"
           volumeMounts:
           - name: app-logs
             mountPath: /var/log/app 

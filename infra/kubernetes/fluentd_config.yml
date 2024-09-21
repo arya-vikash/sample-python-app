@@ -20,5 +20,5 @@ data:
       log_group_name eks-python-app-log-group
       log_stream_name fluentd-sidecar-logs
       auto_create_stream true
-      region your-region
+      region eu-west-2
     </match>
