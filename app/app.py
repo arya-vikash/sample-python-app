@@ -81,12 +81,12 @@ def get_messages(account_id):
 
         formated_messages=[]
         for item in messages:
-        formated_messages.append({
-            "account_id":item[0],
-            "message_id":item[1],
-            "sender_number":item[2],
-            "receiver_number":item[3]
-        })
+            formated_messages.append({
+                "account_id":item[0],
+                "message_id":item[1],
+                "sender_number":item[2],
+                "receiver_number":item[3]
+            })
         cursor.close()
         conn.close()
         return jsonify(messages), 200
@@ -150,7 +150,7 @@ def search_messages():
         cursor.close()
         conn.close()
         return jsonify(formated_result), 200
-        
+
     except Exception as e:
         return handle_exception(e)
 if __name__ == '__main__':
