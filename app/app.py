@@ -14,10 +14,10 @@ setup_logging()
 
 mysql = MySQL()
 
-app.config["MYSQL_DATABASE_USER"] = "user"
-app.config["MYSQL_DATABASE_PASSWORD"] = "password"#os.getenv("db_root_password")
-app.config["MYSQL_DATABASE_DB"] = "messages_db" #os.getenv("db_name")
-app.config["MYSQL_DATABASE_HOST"] = "mysql" #os.getenv("MYSQL_SERVICE_HOST")
+app.config["MYSQL_DATABASE_USER"] = os.getenv("MYSQL_DATABASE_USER")
+app.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("MYSQL_DATABASE_PASSWORD")
+app.config["MYSQL_DATABASE_DB"] = os.getenv("MYSQL_DATABASE_DB")
+app.config["MYSQL_DATABASE_HOST"] = os.getenv("MYSQL_DATABASE_HOST")
 
 mysql.init_app(app)
 
