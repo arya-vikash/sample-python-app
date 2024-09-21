@@ -2,7 +2,8 @@ import os
 import pytest
 from flask import json
 from unittest.mock import MagicMock, patch
-from app import myapp, mysql  # Adjust this import based on your actual file structure
+from app import myapp as myapp
+from app import mysql  # Adjust this import based on your actual file structure
 
 @pytest.fixture
 def client():
