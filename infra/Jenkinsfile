@@ -9,27 +9,17 @@ pipeline {
     }
 
     stages {
-        stage('Install Dependencies') {
-            steps {
 
-                echo 'Installing Python dependencies...'
+        stage('Terraform Plan') {
+            steps {
+                echo 'Running Terraform Plan on $(pwd)/infra'
                 sh '''
-                pwd
-                cd ./app
-                pip3 install --break-system-packages -r requirements.txt
+                cd 
                 '''
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                echo 'Running tests...'
-                // Example of running tests using pytest
-                //sh 'pytest tests/'
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Terraform apply') {
             steps {
                     withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
                         script {
@@ -41,11 +31,8 @@ pipeline {
                             aws ecr get-login-password --region ${AWS_REGION} > /kaniko/.docker/config.json
                             export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
                 
-                            cd ./app
-                            /kaniko/executor \
-                                --context `pwd` \
-                                --dockerfile `pwd`/Dockerfile \
-                                --destination ${IMAGE_URL} \
+                            cd ./infra
+
                             '''
                         }
                     }
