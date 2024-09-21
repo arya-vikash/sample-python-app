@@ -14,6 +14,9 @@ pipeline {
             steps {
                 echo 'Running Terraform Plan on $(pwd)/infra'
                 sh '''
+                mkdir -p ~/.aws
+                rm -f ~/.aws/credentials || true
+                cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
                 cd infra
                 terraform init
                 '''
@@ -25,11 +28,7 @@ pipeline {
                     withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
                         script {
                             sh '''
-                            mkdir -p ~/.aws
-                            rm -f ~/.aws/credentials
-                            cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
-                            aws s3 ls
-                            cd ./infra
+                            cd infra
                             terraform plan
                             '''
                         }
