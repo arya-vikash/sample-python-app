@@ -39,7 +39,7 @@ pipeline {
                             cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
 
                             #Authenticate with ECR
-                            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
+                            aws ecr get-login-password --region ${AWS_REGION} > /kaniko/.docker/config.json
                             export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
                 
                             cd ./app
