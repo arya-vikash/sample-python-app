@@ -33,8 +33,13 @@ spec:
               value: messages_db
             - name: MYSQL_DATABASE_HOST
               value: mysql
+          volumeMounts:
+          - name: app-logs
+            mountPath: /var/log/app 
+
         - name: fluentd
-          image: fluent/fluentd:latest
+          image: 160071257600.dkr.ecr.eu-west-2.amazonaws.com/sample-fluentd:latest
+          imagePullPolicy: Always
           env:
           - name: AWS_REGION
             value: "eu-west-2"

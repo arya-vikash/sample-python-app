@@ -7,15 +7,13 @@ data:
   fluent.conf: |
     <source>
       @type tail
-      path /var/log/app/*.log
-      pos_file /var/log/fluentd-flask-app.pos
-      time_format %Y-%m-%dT%H:%M:%S.%N%z
-      tag flask.*
-      format none
-      read_from_head true
+      path /var/log/app/app.log
+      pos_file /var/log/app/app.log.pos
+      tag flask.app  
+      format none   
     </source>
 
-    <match flask.*>
+    <match flask.app>
       @type cloudwatch_logs
       log_group_name eks-python-app-log-group
       log_stream_name fluentd-sidecar-logs

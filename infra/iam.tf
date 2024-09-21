@@ -5,7 +5,8 @@ data "aws_iam_policy_document" "publish_cloudwatch_logs" {
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
-        "logs:DescribeLogStreams"
+        "logs:DescribeLogStreams",
+        "logs:DescribeLogGroups"
     ]
     effect  = "Allow"
     resources = [
@@ -16,7 +17,6 @@ data "aws_iam_policy_document" "publish_cloudwatch_logs" {
 }
 resource "aws_iam_policy" "publish_cloudwatch_logs" {
   name        = "publish_cloudwatch_logs"
-  path        = "/my-EKS"
   description = "policy to publish to cw logs"
   policy = data.aws_iam_policy_document.publish_cloudwatch_logs.json
 }
