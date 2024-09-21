@@ -16,30 +16,29 @@ pipeline {
                 sh '''
                 cd infra
                 terraform init
-                terraform plan
                 '''
             }
         }
 
-        // stage('Terraform apply') {
-        //     steps {
-        //             withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
-        //                 script {
-        //                     sh '''
-        //                     mkdir -p ~/.aws
-        //                     cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
+        stage('Terraform Plan') {
+            steps {
+                    withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
+                        script {
+                            sh '''
+                            mkdir -p ~/.aws
+                            cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
 
-        //                     #Authenticate with ECR
-        //                     aws ecr get-login-password --region ${AWS_REGION} > /kaniko/.docker/config.json
-        //                     export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
+                            #Authenticate with ECR
+                            aws ecr get-login-password --region ${AWS_REGION} > /kaniko/.docker/config.json
+                            export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
                 
-        //                     cd ./infra
-
-        //                     '''
-        //                 }
-        //             }
-        //         }
-        // }
+                            cd ./infra
+                            terraform plan
+                            '''
+                        }
+                    }
+                }
+        }
     }
 
     post {
