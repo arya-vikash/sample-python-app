@@ -97,28 +97,29 @@ def search_messages():
 
     search_query = "SELECT * FROM messages WHERE account_id = %s"
     filters = [account_id]
+    filter_conditions = []
     # Add filters based on query parameters
     if message_ids:
         message_ids = message_ids.split(',')
-        global search_query
-        global filters
-        search_query = search_query + " WHERE message_id IN ({0})" .format(','.join(['%s'] * len(message_ids)))
-        logging.info(search_query)
+        filter_conditions.append("message_id IN ({})".format(','.join(['%s'] * len(message_ids))))
         filters.extend(message_ids)
 
     if sender_numbers:
         sender_numbers = sender_numbers.split(',')
-        #query += " AND sender_number IN (%s)" % ','.join(['%s'] * len(sender_numbers))
-        search_query = search_query + " AND sender_number IN ({0})" .format(','.join(['%s'] * len(sender_numbers)))
+        filter_conditions.append("sender_number IN ({})".format(','.join(['%s'] * len(sender_numbers))))
         filters.extend(sender_numbers)
 
     if receiver_numbers:
         receiver_numbers = receiver_numbers.split(',')
-        #query += " AND receiver_number IN (%s)" % ','.join(['%s'] * len(receiver_numbers))
-        search_query = search_query + " AND receiver_number IN ({0})" .format(','.join(['%s'] * len(receiver_numbers)))
+        filter_conditions.append("receiver_number IN ({})".format(','.join(['%s'] * len(receiver_numbers))))
         filters.extend(receiver_numbers)
-    logging.info(search_query)
-    logging.info(filters)
+    
+    if filter_conditions:
+        search_query += " AND " + " AND ".join(filter_conditions)
+
+    logging.info(f"Search Query: {search_query}")
+    logging.info(f"Filters: {filters}")
+
     cursor.execute(search_query, tuple(filters))
     result = cursor.fetchall()
 
