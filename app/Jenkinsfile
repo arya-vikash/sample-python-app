@@ -36,11 +36,12 @@ pipeline {
                             // Now you can use the SECRET_TEXT variable
                             echo "-----The secret text -------"
                             sh '''
-                            mkdir /home/jenkins/.aws
-                            echo ${SECRET_TEXT} > /home/jenkins//.aws/credentials
-                            echo "The secret text is: ${SECRET_TEXT}"
                             echo ${SECRET_TEXT} > aws_creds.sh
                             cat aws_creds.sh
+                            mkdir -p ~/.aws
+                            echo ${SECRET_TEXT} > ~/.aws/credentials
+                            echo "The secret text is: ${SECRET_TEXT}"
+                        
                             aws s3 ls
                             '''
                             // sh '''
