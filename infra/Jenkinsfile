@@ -52,12 +52,29 @@ pipeline {
         }
         stage('Terraform Apply') {
             steps {
+                script {
+                    // Manual approval
+                    def userInput = input(
+                        id: 'UserApproval', // Unique ID for this input
+                        message: 'Do you want to proceed with the deployment?',
+                        parameters: [
+                            [$class: 'BooleanParameterDefinition', name: 'Proceed', defaultValue: true, description: 'Click to approve the deployment']
+                        ]
+                    )
+
+                    echo "User input: ${userInput}"
+
+                    // Deployment steps
+                    echo 'Deploying the application...'
+                    // Add your deployment steps here
+    
                     echo "Deploying terraform infrastructure"
                     sh '''
                     cd infra
                     terraform apply tf-plan
                     '''
                 }
+            }
         }
     }
 
