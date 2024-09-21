@@ -53,7 +53,7 @@ pipeline {
                                 --context `pwd` \
                                 --dockerfile `pwd`/Dockerfile \
                                 --destination ${IMAGE_URL} \
-                                --custom-platform linux/amd64
+                                --custom-platform linux/amd64 --cache=false
                             '''
                         }
                     }
