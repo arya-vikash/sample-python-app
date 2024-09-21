@@ -114,8 +114,8 @@ def search_messages():
         #query += " AND receiver_number IN (%s)" % ','.join(['%s'] * len(receiver_numbers))
         query = query + " AND receiver_number IN ({0})" .format(','.join(['%s'] * len(receiver_numbers)))
         filters.extend(receiver_numbers)
-    logger.info(query)
-    logger.info(filters)
+    logging.info(query)
+    logging.info(filters)
     cursor.execute(query, tuple(filters))
     result = cursor.fetchall()
 
