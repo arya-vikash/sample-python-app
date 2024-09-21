@@ -12,13 +12,18 @@ pipeline {
 
         stage('Terraform init') {
             steps {
-                echo 'Running Terraform Plan on $(pwd)/infra'
-                sh '''
-                mkdir -p ~/.aws
-                cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
-                cd infra
-                terraform init
-                '''
+                withCredentials([file(credentialsId: 'aws_creds', variable: 'AWS_CREDENTIALS_FILE')]) {
+                    script {
+                        echo 'Running Terraform Plan on $(pwd)/infra'
+                        sh '''
+                        mkdir -p ~/.aws
+                        cp $AWS_CREDENTIALS_FILE  ~/.aws/credentials
+                        cd infra
+                        terraform init
+                        '''
+                    }
+                }
+                
             }
         }
 
