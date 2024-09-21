@@ -46,6 +46,9 @@ pipeline {
                             export IMAGE_URL=${ECR_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}
                 
                             cd ./app
+                            pwd
+                            ls -l
+                            cat requirements.txt
                             /kaniko/executor \
                                 --context `pwd` \
                                 --dockerfile `pwd`/Dockerfile \
