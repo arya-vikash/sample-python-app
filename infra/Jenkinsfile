@@ -10,7 +10,7 @@ pipeline {
 
     stages {
 
-        stage('Terraform Plan') {
+        stage('Terraform init') {
             steps {
                 echo 'Running Terraform Plan on $(pwd)/infra'
                 sh '''
