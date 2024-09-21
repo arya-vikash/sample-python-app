@@ -26,7 +26,9 @@ pipeline {
                         script {
                             sh '''
                             mkdir -p ~/.aws
+                            rm -f ~/.aws/credentials
                             cp $AWS_CREDENTIALS_FILE ~/.aws/credentials
+                            aws s3 ls
                             cd ./infra
                             terraform plan
                             '''
