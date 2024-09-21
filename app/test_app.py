@@ -2,18 +2,18 @@ import os
 import pytest
 from flask import json
 from unittest.mock import MagicMock, patch
-from app import app, mysql  # Adjust this import based on your actual file structure
+from app import myapp, mysql  # Adjust this import based on your actual file structure
 
 @pytest.fixture
 def client():
     """Create a test client for the Flask application."""
-    app.config['TESTING'] = True
-    app.config["MYSQL_DATABASE_USER"] = "test_user"
-    app.config["MYSQL_DATABASE_PASSWORD"] = "test_password"
-    app.config["MYSQL_DATABASE_DB"] = "test_db"
-    app.config["MYSQL_DATABASE_HOST"] = "test_host"
+    myapp.config['TESTING'] = True
+    myapp.config["MYSQL_DATABASE_USER"] = "test_user"
+    myapp.config["MYSQL_DATABASE_PASSWORD"] = "test_password"
+    myapp.config["MYSQL_DATABASE_DB"] = "test_db"
+    myapp.config["MYSQL_DATABASE_HOST"] = "test_host"
     
-    with app.test_client() as client:
+    with myapp.test_client() as client:
         yield client
 
 def test_index(client):
@@ -37,7 +37,7 @@ def test_create_message(client):
     mock_cursor.execute.return_value = None  # Simulate successful execution
     mock_cursor.fetchall.return_value = []   # Simulate no records returned
     
-    with patch('your_flask_app.mysql.connect', return_value=mock_conn):
+    with patch('app.mysql.connect', return_value=mock_conn):
         response = client.post('/create', json=test_data)
         assert response.status_code == 201
         assert 'message_id' in response.json
@@ -53,7 +53,7 @@ def test_get_messages(client):
         ('123', 'message_id_2', '555-0101', '555-0201')
     ]
     
-    with patch('your_flask_app.mysql.connect', return_value=mock_conn):
+    with patch('app.mysql.connect', return_value=mock_conn):
         response = client.get('/get/messages/123')
         assert response.status_code == 200
         assert len(response.json) == 2  # Should return 2 messages
