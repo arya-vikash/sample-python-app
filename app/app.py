@@ -1,4 +1,4 @@
-from Flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 import logging
 import uuid
 from logging_config import setup_logging
