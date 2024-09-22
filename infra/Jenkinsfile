@@ -74,45 +74,34 @@ pipeline {
         }
         stage('Deploy on EKS') {
             steps {
-                withCredentials([string(credentialsId: 'db_root_pass', variable: 'DB_ROOT_PASSWORD')])  {
-                    script {
-                        // Manual approval
-                        def userInput = input(
-                            id: 'UserApproval', // Unique ID for this input
-                            message: 'Do you want to proceed with the Application deployment in Cluster?',
-                            parameters: [
-                                [$class: 'BooleanParameterDefinition', name: 'Proceed', defaultValue: true, description: 'Click to approve the deployment']
-                            ]
-                        )
+                script {
+                    // Manual approval
+                    def userInput = input(
+                        id: 'UserApproval', // Unique ID for this input
+                        message: 'Do you want to proceed with the Application deployment in Cluster?',
+                        parameters: [
+                            [$class: 'BooleanParameterDefinition', name: 'Proceed', defaultValue: true, description: 'Click to approve the deployment']
+                        ]
+                    )
 
-                        echo "User input: ${userInput}"
-        
-                        echo "Deploying Application in EKS cluster"
-                        
-                        sh '''
-                        echo "---Updating kubec config to connect to remote EKS cluster-----"
-                        aws eks update-kubeconfig --region eu-west-2 --name DemoPyApp-my-cluster
-                        '''
-                        sh '''
-                        export DB_ROOT_PASSWORD=$DB_ROOT_PASSWORD
-                        cd infra/kubernetes
-                        envsubst < app_secret.yml > secret.yml
-                        cat secret.yml
-                        kubectl apply -f secret.yml
-                        '''
-
-                        sh '''
-                        cd infra/kubernetes
-                        kubectl apply -f app_secret.yml
-                        echo "---Deploying database-----"
-                        kubectl apply -f db_pv.yml
-                        kubectl apply -f db_deploy.yml
-                        echo "---Deploying application-----"
-                        kubectl apply -f fluentd_config.yml
-                        kubectl apply -f app_deploy.yml
-                        '''
-                        echo "Deployed update application config on EKS Successfully"
-                    }
+                    echo "User input: ${userInput}"
+    
+                    echo "Deploying Application in EKS cluster"
+                    
+                    sh '''
+                    echo "---Updating kubec config to connect to remote EKS cluster-----"
+                    aws eks update-kubeconfig --region eu-west-2 --name DemoPyApp-my-cluster
+                    cd infra/kubernetes
+                    echo "---Deploying secrets-----"
+                    kubectl apply -f app_secret.yml
+                    echo "---Deploying database-----"
+                    kubectl apply -f db_pv.yml
+                    kubectl apply -f db_deploy.yml
+                    echo "---Deploying application-----"
+                    kubectl apply -f fluentd_config.yml
+                    kubectl apply -f app_deploy.yml
+                    '''
+                    echo "Deployed update application config on EKS Successfully"
                 }
             }
         }
