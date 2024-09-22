@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flaskapi-deployment
+  name: python-app
   labels:
-    app: flaskapi
+    app: python-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flaskapi
+      app: python-app
   template:
     metadata:
       labels:
-        app: flaskapi
+        app: python-app
     spec:
       containers:
-        - name: flaskapi
+        - name: pythonapi
           image: 160071257600.dkr.ecr.eu-west-2.amazonaws.com/sample-ecr:latest
           imagePullPolicy: Always
           ports:
@@ -61,12 +61,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-service
+  name: python-app-service
 spec:
   ports:
   - port: 80
     protocol: TCP
     targetPort: 5000
   selector:
-    app: flaskapi
+    app: python-app
   type: LoadBalancer

@@ -8,3 +8,11 @@ aws dynamodb create-table --table-name rndm-smpl-tf-state-table \
     --attribute-definitions AttributeName=LockID,AttributeType=S \
     --key-schema AttributeName=LockID,KeyType=HASH \
     --billing-mode PAY_PER_REQUEST
+
+#create ECR repositories
+aws ecr create-repository \
+    --repository-name sample-fluentd \
+    --region eu-west-2
+aws ecr create-repository \
+    --repository-name sample-ecr \
+    --region eu-west-2
