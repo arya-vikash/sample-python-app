@@ -14,7 +14,7 @@ Tag the image with 160071257600.dkr.ecr.eu-west-2.amazonaws.com/sample-fluentd a
 - Contains jenkins, fluentd custom docker files.
 - Documentation of the project.
 
----
+
 # Project Setup and running
 
 ### Setup Jenkins infra for CICD
