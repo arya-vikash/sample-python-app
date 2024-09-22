@@ -1,0 +1,42 @@
+# Use the official Jenkins LTS image as the base
+FROM gcr.io/kaniko-project/executor AS kaniko
+FROM jenkins/jenkins:lts
+
+# Switch to root to install dependencies
+USER root
+
+# Install kubectl, Python, pip, and AWS CLI
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    curl \
+    unzip && \
+    # Install kubectl
+    curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl && \
+    # Install AWS CLI v2
+    #curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    #unzip awscliv2.zip && \
+    #./aws/install && \
+    #rm -rf awscliv2.zip aws && \
+    # Clean up APT cache to reduce image size
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN pip3 install awscli --upgrade --break-system-packages
+# Install Kaniko
+COPY --from=kaniko /kaniko/executor /kaniko/executor
+COPY --from=kaniko /kaniko/.docker /kaniko/.docker
+RUN chmod +x /kaniko/executor && chmod +x /kaniko/.docker
+
+#Install Terraform 
+RUN apt-get update && apt-get install wget -y && \
+    wget https://releases.hashicorp.com/terraform/1.8.0/terraform_1.8.0_linux_arm64.zip && \
+    unzip terraform_1.8.0_linux_arm64.zip && \
+    mv terraform /usr/local/bin/ && \
+    chmod +x /usr/local/bin/terraform && \
+    rm terraform_1.8.0_linux_arm64.zip && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# Switch back to the Jenkins user
+#USER jenkins
+

@@ -97,7 +97,8 @@ pipeline {
                     echo "---Deploying database-----"
                     kubectl apply -f db_pv.yml
                     kubectl apply -f db_deploy.yml
-                    echo "---Deploying database-----"
+                    echo "---Deploying application-----"
+                    kubectl apply -f fluentd_config.yml
                     kubectl apply -f app_deploy.yml
                     '''
                     echo "Deployed update application config on EKS Successfully"

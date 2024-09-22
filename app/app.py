@@ -89,7 +89,7 @@ def get_messages(account_id):
             })
         cursor.close()
         conn.close()
-        return jsonify(messages), 200
+        return jsonify(formated_messages), 200
 
     except Exception as e:
         return handle_exception(e)
@@ -110,7 +110,7 @@ def search_messages():
         search_query = "SELECT * FROM messages WHERE account_id = %s"
         filters = [account_id]
         filter_conditions = []
-        # Add filters based on query parameters
+        
         if message_ids:
             message_ids = message_ids.split(',')
             filter_conditions.append("message_id IN ({})".format(','.join(['%s'] * len(message_ids))))
