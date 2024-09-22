@@ -74,7 +74,7 @@ pipeline {
         }
         stage('Deploy on EKS') {
             steps {
-                withCredentials([file(credentialsId: 'db_root_pass', variable: 'DB_ROOT_PASSWORD')]) {
+                withCredentials([string(credentialsId: 'db_root_pass', variable: 'DB_ROOT_PASSWORD')])  {
                     script {
                         // Manual approval
                         def userInput = input(
