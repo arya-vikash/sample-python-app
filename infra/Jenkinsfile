@@ -94,9 +94,9 @@ pipeline {
                         aws eks update-kubeconfig --region eu-west-2 --name DemoPyApp-my-cluster
                         '''
                         sh '''
-                        export DB_PASSWORD=$(echo -n $DB_ROOT_PASSWORD | base64)
+                        export DB_ROOT_PASSWORD_BASE64=$(echo -n $DB_ROOT_PASSWORD | base64)
                         cd infra/kubernetes
-                        envsubst < app_secret.yml > secret.yml
+                        envsubst < app_secret.yml | sed "s/db_root_password: .*/db_root_password: $DB_ROOT_PASSWORD_BASE64/" > secret.yml
                         cat secret.yml
                         kubectl apply -f secret.yml
                         '''

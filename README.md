@@ -50,7 +50,7 @@ aws_session_token=IQoJb3JpZ2luX2VjEF4aDGV1LWNlbnRyYWwtMSJGMEQCIBzG
 ```
 - Got to manage jenkins > credentials > global domain > add credentials
 - Select kind as Secret file. Upload file aws_creds. Give id as aws_creds and save.
-
+***WARNING***: **A good and secure practice would be to not use access keys for authentication. Instead setup authentication of jenkins with identity provides and attach dedicated IAM role to this identity to deploy resources on AWS**
 ### Create APP Pipelines in Jenkins
 1. Once jenkins infra setup is done. Go to dashboard
 2. Click on new item -> Enter pipeline name + select type as Pipeline -> Click OK

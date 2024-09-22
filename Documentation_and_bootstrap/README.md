@@ -1,3 +1,7 @@
+# sample-python-app
+Deployed in AWS EKS with CICd implementation using jenkins
+
+---
 # Folder structure 
 ### App
 - Contains all the application related files i.e. application python code, unit tests, requirements.txt. 
@@ -46,7 +50,7 @@ aws_session_token=IQoJb3JpZ2luX2VjEF4aDGV1LWNlbnRyYWwtMSJGMEQCIBzG
 ```
 - Got to manage jenkins > credentials > global domain > add credentials
 - Select kind as Secret file. Upload file aws_creds. Give id as aws_creds and save.
-
+***WARNING***: **A good and secure practice would be to not use access keys for authentication. Instead setup authentication of jenkins with identity provides and attach dedicated IAM role to this identity to deploy resources on AWS**
 ### Create APP Pipelines in Jenkins
 1. Once jenkins infra setup is done. Go to dashboard
 2. Click on new item -> Enter pipeline name + select type as Pipeline -> Click OK
@@ -78,3 +82,6 @@ Following stages are involved in the infra deployment pipeline. Working dir = in
 - **Deploy on EKS** : WorkingDir = infra/kubernetes. Connects to the remote cluster. Applies application, Database resource manifests file to kubernetes cluster to deploy application code.
 
 
+# Architecture of Cloud infrastructure
+Here is a simple architecture of how whole infra looks on cloud. A data, request/response flow of "get/messages/" API is depicted for example.
+![arch](Documentation_and_bootstrap/python-app-eks.png)
