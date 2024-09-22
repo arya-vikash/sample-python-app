@@ -22,7 +22,7 @@ spec:
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: flaskapi-secrets
+                name: python-app-secrets
                 key: db_root_password
           - name: MYSQL_DATABASE
             value: "messages_db"
