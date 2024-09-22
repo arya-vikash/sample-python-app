@@ -82,3 +82,6 @@ Following stages are involved in the infra deployment pipeline. Working dir = in
 - **Deploy on EKS** : WorkingDir = infra/kubernetes. Connects to the remote cluster. Applies application, Database resource manifests file to kubernetes cluster to deploy application code.
 
 
+# Architecture of Cloud infrastructure
+Here is a simple architecture of how whole infra looks on cloud. A data, request/response flow of "get/messages/" API is depicted for example.
+![arch](Documentation_and_bootstrap/python-app-eks.png)
