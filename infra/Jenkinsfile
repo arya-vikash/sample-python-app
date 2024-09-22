@@ -91,7 +91,7 @@ pipeline {
                         
                         sh '''
                         echo "---Updating kubec config to connect to remote EKS cluster-----"
-                        aws eks update-kubeconfig --region eu-west-2 --name my-cluster
+                        aws eks update-kubeconfig --region eu-west-2 --name DemoPyApp-my-cluster
                         '''
                         sh '''
                         export DB_ROOT_PASSWORD=$DB_ROOT_PASSWORD
