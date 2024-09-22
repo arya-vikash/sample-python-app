@@ -57,7 +57,7 @@ public_outbound_acl_rules=[
       from_port   = 443,
       protocol    = "tcp",
       rule_action = "allow",
-      rule_number = 100,
+      rule_number = 200,
       to_port     = 443
     },
     {
@@ -65,7 +65,7 @@ public_outbound_acl_rules=[
       from_port   = 1024,
       protocol    = "tcp",
       rule_action = "allow",
-      rule_number = 200,
+      rule_number = 300,
       to_port     = 65535
     }
   ]
